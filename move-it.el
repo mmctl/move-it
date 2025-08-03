@@ -188,7 +188,7 @@ up instead (down if ARG is negative). If `move-it-multi-line-region-whole-lines'
 is non-nil, moves lines (with content) in region as a whole whenever the region
 spans multiple lines."
   (interactive "r\np")
-  (if (or move-it-multi-line-region-whole-lines
+  (if (or (not move-it-multi-line-region-whole-lines)
           (= (line-number-at-pos start) (line-number-at-pos end)))
       (move-it--region-vertically start end (- arg))
     (move-it--wholeline-region-vertically start end (- arg))))
@@ -199,7 +199,7 @@ lines down (up if ARG is negative). If `move-it-multi-line-region-whole-lines'
 is non-nil, moves lines (with content) in region as a whole whenever the region
 spans multiple lines."
   (interactive "r\np")
-  (if (or move-it-multi-line-region-whole-lines
+  (if (or (not move-it-multi-line-region-whole-lines)
           (= (line-number-at-pos start) (line-number-at-pos end)))
       (move-it--region-vertically start end arg)
     (move-it--wholeline-region-vertically start end arg)))
