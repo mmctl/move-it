@@ -181,8 +181,8 @@ but inserts/deletes whitespace before point when on an empty line."
 
 ;; Region-based commands
 (defun move-it-region-up (start end &optional arg)
-  "Moves region defined by START and END 1 line up. With ARG, moves |ARG|
-lines up instead (down if ARG is negative). If `move-it-multi-line-region-whole-lines'
+  "Moves region defined by START and END 1 line up. With ARG, moves |ARG| lines
+up instead (down if ARG is negative). If `move-it-multi-line-region-whole-lines'
 is non-nil, moves lines (with content) in region as a whole whenever the region
 spans multiple lines."
   (interactive "r\np")
