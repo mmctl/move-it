@@ -32,7 +32,7 @@
 
 ;; Customization
 (defgroup move-it nil
-  "Customization group for `move-it'."
+  "Commands for conveniently moving text around."
   :group 'convenience
   :group 'text
   :prefix "move-it-")
