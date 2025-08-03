@@ -6,7 +6,7 @@
 ;; Maintainer: Matthias Meijers <kernel@mmeijers.com>
 ;; Created: 03 August 2025
 
-;; Keywords: convenience
+;; Keywords: convenience, text
 ;; URL: https://github.com/mmctl/move-it
 
 ;; This file is not part of GNU Emacs.
@@ -33,6 +33,8 @@
 ;; Customization
 (defgroup move-it nil
   "Customization group for `move-it'."
+  :group 'convenience
+  :group 'text
   :prefix "move-it-")
 
 (defcustom move-it-maintain-region-start-column t
