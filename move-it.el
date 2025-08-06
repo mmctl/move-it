@@ -72,7 +72,7 @@ negative). Maintains relative position of point and mark."
     (when (and (< 0 arg) (<= (1- (line-number-at-pos (point-max))) lnend))
       (user-error "End of region on last line of buffer, cannot move down"))
     (unless (and move-it-maintain-region-start-column
-                 (memq last-command '(move-it-up move-it-down)))
+                 (memq last-command '(move-it-region-up move-it-region-down)))
       (setq-local move-it--region-start-column (save-excursion
                                                  (goto-char start)
                                                  (current-column))))
@@ -255,7 +255,10 @@ Defaults to 1 character right."
 |ARG| lines up (down if ARG is negative). Defaults to 1 line up."
   (interactive "p")
   (if (use-region-p)
-      (move-it-region-up (region-beginning) (region-end) arg)
+      (progn
+        (setq this-command #'move-it-region-up)
+        (move-it-region-up (region-beginning) (region-end) arg))
+    (setq this-command #'move-it-line-up)
     (move-it-line-up arg)))
 
 (defun move-it-down (&optional arg)
@@ -264,7 +267,10 @@ Defaults to 1 character right."
 lines down (up if ARG is negative). Defaults to 1 line down."
   (interactive "p")
   (if (use-region-p)
-      (move-it-region-down (region-beginning) (region-end) arg)
+      (progn
+        (setq this-command #'move-it-region-down)
+        (move-it-region-down (region-beginning) (region-end) arg))
+    (setq this-command #'move-it-line-down)
     (move-it-line-down arg)))
 
 (defun move-it-left (&optional arg)
@@ -274,7 +280,10 @@ at point |ARG| characters left (right if ARG is negative).
 Defaults to 1 character left."
   (interactive "p")
   (if (use-region-p)
-      (move-it-region-left (region-beginning) (region-end) arg)
+      (progn
+        (setq this-command #'move-it-region-left)
+        (move-it-region-left (region-beginning) (region-end) arg))
+    (setq this-command #'move-it-line-left)
     (move-it-line-left arg)))
 
 (defun move-it-right (&optional arg)
@@ -284,7 +293,10 @@ at point |ARG| characters right (left if ARG is negative).
 Defaults to 1 character right."
   (interactive "p")
   (if (use-region-p)
-      (move-it-region-right (region-beginning) (region-end) arg)
+      (progn
+        (setq this-command #'move-it-region-right)
+        (move-it-region-right (region-beginning) (region-end) arg))
+    (setq this-command #'move-it-line-right)
     (move-it-line-right arg)))
 
 
