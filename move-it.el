@@ -127,7 +127,7 @@ if ARG is negative). Maintains relative position of point and mark."
            (end (save-excursion
                   (goto-char origend)
                   (end-of-line)
-                  (if (looking-at-p "\n") (1+ (point)) (point))))
+                  (if (eq (char-after) ?\n) (1+ (point)) (point))))
            (rtob (- origstart start))
            (rtoe (- end origend))
            (content (delete-and-extract-region start end)))
@@ -161,24 +161,28 @@ With ARG, moves |ARG| lines down (up if ARG is negative)."
       (user-error "On first line of buffer, cannot move up"))
     (when (and (< 0 arg) (<= (1- (line-number-at-pos (point-max))) ln))
       (user-error "On last line of buffer, cannot move down"))
-    (pcase-let* ((col (current-column))
-                 (`(,beg . ,end) (bounds-of-thing-at-point 'line))
-                 (line (delete-and-extract-region beg end)))
+    (let ((col (current-column))
+          (line (delete-and-extract-region (line-beginning-position)
+                                           (save-excursion
+                                             (end-of-line)
+                                             (if (eq (char-after) ?\n)
+                                                 (1+ (point))
+                                               (point))))))
       (forward-line arg)
       (save-excursion (insert line))
       (move-to-column col))))
 
 (defun move-it--line-horizontally (&optional arg)
   "Moves line at point left or right, depending on ARG (defaults to 1 character
-right). With ARG, moves |ARG| characters right (left if ARG is negative). This
-is essentially equivalent to performing `indent-rigidly' on the current line,
-but inserts/deletes whitespace before point when on an empty line."
-  (pcase-let ((`(,beg . ,end) (bounds-of-thing-at-point 'line)))
-    (if (string-empty-p (string-trim (buffer-substring-no-properties beg end)))
-        (if (<= 0 arg)
-            (insert (make-string arg ?\s))
-          (delete-region (max beg (- (point) (abs arg))) (point)))
-      (indent-rigidly beg end (or arg 1)))))
+right). With ARG, moves |ARG| characters right (left if ARG is negative). Keeps
+point at relative position in line (note this means that point does not move at
+all if it is at the beginning of the line)."
+  (save-excursion
+    (unless (bolp)
+      (beginning-of-line))
+    (if (<= 0 arg)
+        (insert-char ?\s arg)
+      (delete-region (point) (+ (point) (min (abs arg) (current-indentation)))))))
 
 
 ;; Region-based commands
